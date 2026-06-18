@@ -15,6 +15,7 @@ export function AppTabs() {
         tabBarInactiveTintColor: theme.outline,
         headerShown: false,
         tabBarStyle: {
+          position: "absolute",
           backgroundColor: theme.surfaceContainerLowest,
           borderTopLeftRadius: 10,
           borderTopRightRadius: 10,
