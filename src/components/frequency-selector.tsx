@@ -1,7 +1,6 @@
 import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
 import { useTheme } from "@/hooks/use-theme";
-
-const DAYS = ["M", "T", "W", "T", "F", "S", "S"];
+import { WEEKDAYS } from "@/constants/habit";
 
 interface FrequencySelectorProps {
   type: "everyday" | "specific";
@@ -77,7 +76,7 @@ export const FrequencySelector = ({
       </View>
 
       <View style={styles.daysContainer}>
-        {DAYS.map((day, index) => {
+        {WEEKDAYS.map((day, index) => {
           const isSelected = selectedDays.includes(index);
           return (
             <TouchableOpacity
@@ -103,7 +102,7 @@ export const FrequencySelector = ({
                   }
                 ]}
               >
-                {day}
+                {day[0].toUpperCase()}
               </Text>
             </TouchableOpacity>
           );

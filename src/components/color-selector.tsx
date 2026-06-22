@@ -1,15 +1,7 @@
 import { View, TouchableOpacity, StyleSheet } from "react-native";
 import { MaterialDesignIcons } from "@react-native-vector-icons/material-design-icons";
 import { useTheme } from "@/hooks/use-theme";
-
-const COLORS = [
-  "#2170e4", // Blue
-  "#6cf8bb", // Light green
-  "#b75b00", // Orange/Brown
-  "#ffdad6", // Pink light
-  "#a050ff", // Purple
-  "#f03e82" // Pink strong
-];
+import { HABIT_COLORS } from "@/constants/habit";
 
 interface ColorSelectorProps {
   selectedColor: string;
@@ -24,7 +16,7 @@ export const ColorSelector = ({
 
   return (
     <View style={styles.container}>
-      {COLORS.map((color) => {
+      {HABIT_COLORS.map((color) => {
         const isSelected = selectedColor === color;
         return (
           <TouchableOpacity

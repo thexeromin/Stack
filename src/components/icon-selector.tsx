@@ -1,21 +1,7 @@
 import { View, TouchableOpacity, StyleSheet, Dimensions } from "react-native";
 import { MaterialDesignIcons } from "@react-native-vector-icons/material-design-icons";
 import { useTheme } from "@/hooks/use-theme";
-
-const ICONS = [
-  "water-outline",
-  "dumbbell",
-  "book-open-outline",
-  "meditation",
-  "run",
-  "piggy-bank-outline",
-  "silverware-fork-knife",
-  "weather-night",
-  "code-tags",
-  "pencil-outline",
-  "hand-wash-outline",
-  "dots-horizontal"
-] as const;
+import { HABIT_ICONS } from "@/constants/habit";
 
 interface IconSelectorProps {
   selectedIcon: string;
@@ -27,7 +13,7 @@ export const IconSelector = ({ selectedIcon, onSelect }: IconSelectorProps) => {
 
   return (
     <View style={styles.grid}>
-      {ICONS.map((icon) => {
+      {HABIT_ICONS.map((icon) => {
         const isSelected = selectedIcon === icon;
         return (
           <TouchableOpacity
