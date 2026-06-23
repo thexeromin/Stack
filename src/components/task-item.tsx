@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet } from "react-native";
+import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 import {
   MaterialDesignIcons,
   MaterialDesignIconsIconName
@@ -10,13 +10,22 @@ export type TaskProps = {
   streak: number;
   icon: MaterialDesignIconsIconName;
   completed: boolean;
+  onToggle?: () => void;
 };
 
-export function TaskItem({ title, streak, icon, completed }: TaskProps) {
+export function TaskItem({
+  title,
+  streak,
+  icon,
+  completed,
+  onToggle
+}: TaskProps) {
   const theme = useTheme() as any;
 
   return (
-    <View
+    <TouchableOpacity
+      activeOpacity={0.8}
+      onPress={onToggle}
       style={[
         styles.container,
         { backgroundColor: theme.surfaceContainerLowest }
@@ -56,7 +65,7 @@ export function TaskItem({ title, streak, icon, completed }: TaskProps) {
           />
         )}
       </View>
-    </View>
+    </TouchableOpacity>
   );
 }
 

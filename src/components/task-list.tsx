@@ -7,6 +7,7 @@ export function TaskList() {
   const habits = useHabitStore((state) => state.habits);
   const habitOrder = useHabitStore((state) => state.habitOrder);
   const logs = useHabitStore((state) => state.logs);
+  const toggleLog = useHabitStore((state) => state.toggleLog);
 
   // Get today's date in YYYY-MM-DD format based on local time
   const today = new Date().toLocaleDateString("en-CA");
@@ -28,6 +29,7 @@ export function TaskList() {
             streak={streak}
             icon={habit.icon as any}
             completed={completed}
+            onToggle={() => toggleLog(id, today)}
           />
         );
       })}

@@ -26,6 +26,19 @@ export const useHabitStore = create<HabitState>()((set) => ({
         habitOrder: [...state.habitOrder, id]
       };
     }),
-  toggleLog: (habitId: string, date: string) => {},
+  toggleLog: (habitId, date) =>
+    set((state) => {
+      const habitLogs = state.logs[habitId] || {};
+      const isCompleted = habitLogs[date] || false;
+      return {
+        logs: {
+          ...state.logs,
+          [habitId]: {
+            ...habitLogs,
+            [date]: !isCompleted
+          }
+        }
+      };
+    }),
   removeHabit: (id: string) => {}
 }));
