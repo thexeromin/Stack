@@ -1,24 +1,36 @@
 import { View, StyleSheet } from "react-native";
-import { TaskItem, TaskProps } from "./task-item";
+import { TaskItem } from "./task-item";
 
-const TASKS: TaskProps[] = [
-  { title: "Drink Water", streak: 12, icon: "water-outline", completed: true },
-  {
-    title: "Read 20 mins",
-    streak: 5,
-    icon: "book-open-variant",
-    completed: false
-  },
-  { title: "Meditation", streak: 2, icon: "yoga", completed: false },
-  { title: "Morning Jog", streak: 0, icon: "run", completed: false }
-];
+import { useHabitStore } from "@/store/habit";
 
 export function TaskList() {
+  const habits = useHabitStore((state) => state.habits);
+  const habitOrder = useHabitStore((state) => state.habitOrder);
+  const logs = useHabitStore((state) => state.logs);
+
+  // Get today's date in YYYY-MM-DD format based on local time
+  const today = new Date().toLocaleDateString("en-CA");
+
   return (
     <View style={styles.container}>
-      {TASKS.map((task, index) => (
-        <TaskItem key={index} {...task} />
-      ))}
+      {habitOrder.map((id) => {
+        const habit = habits[id];
+        if (!habit) return null;
+
+        const completed = logs[id]?.[today] || false;
+        // TODO: implment streak functionality
+        const streak = 0;
+
+        return (
+          <TaskItem
+            key={id}
+            title={habit.name}
+            streak={streak}
+            icon={habit.icon as any}
+            completed={completed}
+          />
+        );
+      })}
     </View>
   );
 }
