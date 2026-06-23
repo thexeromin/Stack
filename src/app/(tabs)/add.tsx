@@ -77,20 +77,7 @@ export default function Add() {
           />
         </FormSection>
 
-        <FormSection
-          title="Frequency"
-          rightElement={
-            <Text
-              style={{
-                color: theme.primary,
-                fontFamily: "Inter_600SemiBold",
-                fontSize: 13
-              }}
-            >
-              Custom
-            </Text>
-          }
-        >
+        <FormSection title="Frequency">
           <FrequencySelector
             type={freqType}
             setType={setFreqType}

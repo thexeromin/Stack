@@ -75,39 +75,41 @@ export const FrequencySelector = ({
         </TouchableOpacity>
       </View>
 
-      <View style={styles.daysContainer}>
-        {WEEKDAYS.map((day, index) => {
-          const isSelected = selectedDays.includes(index);
-          return (
-            <TouchableOpacity
-              key={index}
-              style={[
-                styles.dayCircle,
-                {
-                  backgroundColor: isSelected
-                    ? theme.primary
-                    : theme.surfaceContainerLow
-                }
-              ]}
-              onPress={() => toggleDay(index)}
-            >
-              <Text
+      {type === "specific" && (
+        <View style={styles.daysContainer}>
+          {WEEKDAYS.map((day, index) => {
+            const isSelected = selectedDays.includes(index);
+            return (
+              <TouchableOpacity
+                key={index}
                 style={[
-                  styles.dayText,
+                  styles.dayCircle,
                   {
-                    color: isSelected
-                      ? theme.onPrimary
-                      : theme.onSurfaceVariant,
-                    fontFamily: "Inter_600SemiBold"
+                    backgroundColor: isSelected
+                      ? theme.primary
+                      : theme.surfaceContainerLow
                   }
                 ]}
+                onPress={() => toggleDay(index)}
               >
-                {day[0].toUpperCase()}
-              </Text>
-            </TouchableOpacity>
-          );
-        })}
-      </View>
+                <Text
+                  style={[
+                    styles.dayText,
+                    {
+                      color: isSelected
+                        ? theme.onPrimary
+                        : theme.onSurfaceVariant,
+                      fontFamily: "Inter_600SemiBold"
+                    }
+                  ]}
+                >
+                  {day[0].toUpperCase()}
+                </Text>
+              </TouchableOpacity>
+            );
+          })}
+        </View>
+      )}
     </View>
   );
 };
