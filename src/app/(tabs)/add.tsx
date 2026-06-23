@@ -10,9 +10,15 @@ import { PrimaryButton } from "@/components/primary-button";
 import { CustomSwitch } from "@/components/custom-switch";
 import { MaterialDesignIcons } from "@react-native-vector-icons/material-design-icons";
 import { BottomTabInset } from "@/constants/theme";
+import { useRouter } from "expo-router";
+import { useHabitStore } from "@/store/habit";
+import { WEEKDAYS, type HabitIcon, type HabitColor } from "@/constants/habit";
+import { Alert } from "react-native";
 
 export default function Add() {
   const theme = useTheme();
+  const router = useRouter();
+  const addHabit = useHabitStore((state) => state.addHabit);
 
   const [habitName, setHabitName] = useState("");
   const [selectedIcon, setSelectedIcon] = useState("water-outline");
@@ -27,6 +33,42 @@ export default function Add() {
         ? prev.filter((d) => d !== index)
         : [...prev, index].sort()
     );
+  };
+
+  const handleSave = () => {
+    if (!habitName.trim()) {
+      Alert.alert("Error", "Please enter a habit name.");
+      return;
+    }
+
+    addHabit({
+      name: habitName.trim(),
+      icon: selectedIcon as HabitIcon,
+      color: selectedColor as HabitColor,
+      archived: false,
+      frequency: {
+        type: freqType === "everyday" ? "daily" : "custom",
+        days:
+          freqType === "specific"
+            ? selectedDays.map((i) => WEEKDAYS[i])
+            : undefined
+      },
+      reminder: {
+        enabled: dailyReminder,
+        time: dailyReminder ? "08:00" : undefined
+      }
+    });
+
+    // Reset form
+    setHabitName("");
+    setSelectedIcon("water-outline");
+    setSelectedColor("#2170e4");
+    setFreqType("everyday");
+    setSelectedDays([0, 1, 2, 3, 4]);
+    setDailyReminder(true);
+
+    // Navigate to home tab
+    router.navigate("/");
   };
 
   return (
@@ -137,7 +179,7 @@ export default function Add() {
         </View>
 
         <View style={styles.buttonContainer}>
-          <PrimaryButton title="Save Habit" onPress={() => {}} />
+          <PrimaryButton title="Save Habit" onPress={handleSave} />
         </View>
       </ScrollView>
     </SafeAreaView>

@@ -55,6 +55,9 @@ importers:
       expo-web-browser:
         specifier: ~56.0.5
         version: 56.0.5(expo@56.0.12)(react-native@0.85.3(@babel/core@7.29.7)(@react-native/metro-config@0.85.3(@babel/core@7.29.7))(@types/react@19.2.17)(react@19.2.3))
+      nanoid:
+        specifier: ^5.1.15
+        version: 5.1.15
       react:
         specifier: 19.2.3
         version: 19.2.3
@@ -3539,6 +3542,14 @@ packages:
         integrity: sha512-ZB9RH/39qpq5Vu6Y+NmUaFhQR6pp+M2Xt76XBnEwDaGcVAqhlvxrl3B2bKS5D3NH3QR76v3aSrKaF/Kiy7lEtQ==
       }
     engines: { node: ^10 || ^12 || ^13.7 || ^14 || >=15.0.1 }
+    hasBin: true
+
+  nanoid@5.1.15:
+    resolution:
+      {
+        integrity: sha512-kBg3RpGtIe+RpTbyXwoI6pk5yD7KUiI3sygUqgeBMRst42KmhB4RZC7eiO9Wa1HIpaCCtpE2DJ6OI4Wi5ebwFw==
+      }
+    engines: { node: ^18 || >=20 }
     hasBin: true
 
   negotiator@0.6.3:
@@ -7487,6 +7498,8 @@ snapshots:
   multitars@1.0.0: {}
 
   nanoid@3.3.12: {}
+
+  nanoid@5.1.15: {}
 
   negotiator@0.6.3: {}
 

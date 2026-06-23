@@ -1,5 +1,6 @@
 import { create } from "zustand";
 import type { Habit } from "@/types/habit";
+import { nanoid } from "nanoid/non-secure";
 
 interface HabitState {
   habits: Record<string, Habit>; // id -> Habit
@@ -16,7 +17,15 @@ export const useHabitStore = create<HabitState>()((set) => ({
   habitOrder: [],
   logs: {},
 
-  addHabit: (habit: Omit<Habit, "id" | "createdAt">) => {},
+  addHabit: (habit) =>
+    set((state) => {
+      const id = nanoid();
+      const createdAt = new Date().toISOString();
+      return {
+        habits: { ...state.habits, [id]: { ...habit, id, createdAt } as Habit },
+        habitOrder: [...state.habitOrder, id]
+      };
+    }),
   toggleLog: (habitId: string, date: string) => {},
   removeHabit: (id: string) => {}
 }));
