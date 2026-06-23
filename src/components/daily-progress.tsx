@@ -2,8 +2,37 @@ import { View, Text, StyleSheet } from "react-native";
 import { useTheme } from "@/hooks/use-theme";
 import { CircularProgress } from "./circular-progress";
 
+import { useHabitStore } from "@/store/habit";
+import type { Weekday } from "@/types/habit";
+
 export function DailyProgress() {
   const theme = useTheme() as any;
+  const habits = useHabitStore((state) => state.habits);
+  const habitOrder = useHabitStore((state) => state.habitOrder);
+  const logs = useHabitStore((state) => state.logs);
+
+  // Date and day logic
+  const todayDate = new Date();
+  const todayDateStr = todayDate.toLocaleDateString("en-CA");
+  const dayNames = ["sun", "mon", "tue", "wed", "thu", "fri", "sat"];
+  const todayDayName = dayNames[todayDate.getDay()] as Weekday;
+
+  // Calculate stats
+  const habitsToday = habitOrder.filter((id) => {
+    const habit = habits[id];
+    if (!habit) return false;
+    if (habit.frequency.type === "daily") return true;
+    return habit.frequency.days?.includes(todayDayName);
+  });
+
+  const totalHabits = habitsToday.length;
+  const completedHabits = habitsToday.filter(
+    (id) => logs[id]?.[todayDateStr]
+  ).length;
+
+  // Edge case: 0 habits today
+  const progress =
+    totalHabits === 0 ? 0 : Math.round((completedHabits / totalHabits) * 100);
 
   return (
     <View
@@ -17,10 +46,12 @@ export function DailyProgress() {
           Daily Progress
         </Text>
         <Text style={[styles.title, { color: theme.onSurface }]}>
-          1 of 4 completed
+          {totalHabits === 0
+            ? "No habits for today"
+            : `${completedHabits} of ${totalHabits} completed`}
         </Text>
       </View>
-      <CircularProgress progress={25} size={72} strokeWidth={8} />
+      <CircularProgress progress={progress} size={72} strokeWidth={8} />
     </View>
   );
 }
