@@ -60,11 +60,6 @@ export function HabitItem({
           />
         ))}
       </View>
-      <MaterialDesignIcons
-        name="chevron-right"
-        size={20}
-        color={theme.onSurfaceVariant}
-      />
     </Pressable>
   );
 }

@@ -4,10 +4,24 @@ import { Spacing } from "@/constants/theme";
 import { StatCard } from "@/components/stat-card";
 import { HabitItem } from "@/components/habit-item";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { useHabitStore } from "@/store/habit";
+import { useColorScheme } from "@/hooks/use-color-scheme";
 
 export default function Insights() {
   const theme = useTheme();
   const insets = useSafeAreaInsets();
+  const colorScheme = useColorScheme();
+  const isDark = colorScheme === "dark";
+
+  const habits = useHabitStore((state) => state.habits);
+  const habitOrder = useHabitStore((state) => state.habitOrder);
+  const logs = useHabitStore((state) => state.logs);
+
+  const last7Days = Array.from({ length: 7 }, (_, i) => {
+    const d = new Date();
+    d.setDate(d.getDate() - (6 - i));
+    return d.toLocaleDateString("en-CA");
+  });
 
   return (
     <ScrollView
@@ -46,30 +60,46 @@ export default function Insights() {
         Your Habits
       </Text>
 
-      <HabitItem
-        title="Morning Yoga"
-        streak="5 days streak"
-        iconName="yoga"
-        iconColor={theme.primary}
-        iconBgColor={theme.primaryFixed}
-        history={[true, true, true, false, true, true, true]}
-      />
-      <HabitItem
-        title="Read 20 mins"
-        streak="12 days streak"
-        iconName="book-open-page-variant"
-        iconColor={theme.tertiary}
-        iconBgColor={theme.tertiaryFixed}
-        history={[true, true, true, true, true, true, true]}
-      />
-      <HabitItem
-        title="Drink Water"
-        streak="2 days streak"
-        iconName="water"
-        iconColor={theme.secondary}
-        iconBgColor={theme.secondaryFixed}
-        history={[false, false, false, true, true, true, true]}
-      />
+      {habitOrder.map((id) => {
+        const habit = habits[id];
+        if (!habit) return null;
+
+        const habitLogs = logs[id] || {};
+        const history = last7Days.map((date) => !!habitLogs[date]);
+
+        let streakCount = 0;
+        const today = new Date().toLocaleDateString("en-CA");
+        let currentDate = new Date();
+
+        while (true) {
+          const dStr = currentDate.toLocaleDateString("en-CA");
+          if (habitLogs[dStr]) {
+            streakCount++;
+            currentDate.setDate(currentDate.getDate() - 1);
+          } else {
+            // Allow the streak to continue if only today is missed so far
+            if (dStr === today) {
+              currentDate.setDate(currentDate.getDate() - 1);
+            } else {
+              break;
+            }
+          }
+        }
+
+        const iconBgColor = isDark ? `${habit.color}40` : `${habit.color}26`;
+
+        return (
+          <HabitItem
+            key={id}
+            title={habit.name}
+            streak={`${streakCount} day${streakCount !== 1 ? "s" : ""} streak`}
+            iconName={habit.icon as any}
+            iconColor={habit.color}
+            iconBgColor={iconBgColor}
+            history={history}
+          />
+        );
+      })}
     </ScrollView>
   );
 }
