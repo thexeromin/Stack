@@ -28,6 +28,7 @@ export function TaskList() {
             title={habit.name}
             streak={streak}
             icon={habit.icon as any}
+            color={habit.color}
             completed={completed}
             onToggle={() => toggleLog(id, today)}
           />

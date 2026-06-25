@@ -4,11 +4,13 @@ import {
   MaterialDesignIconsIconName
 } from "@react-native-vector-icons/material-design-icons";
 import { useTheme } from "@/hooks/use-theme";
+import { useColorScheme } from "@/hooks/use-color-scheme";
 
 export type TaskProps = {
   title: string;
   streak: number;
   icon: MaterialDesignIconsIconName;
+  color: string;
   completed: boolean;
   onToggle?: () => void;
 };
@@ -17,10 +19,14 @@ export function TaskItem({
   title,
   streak,
   icon,
+  color,
   completed,
   onToggle
 }: TaskProps) {
   const theme = useTheme() as any;
+  const colorScheme = useColorScheme();
+  const isDark = colorScheme === "dark";
+  const iconBackgroundColor = isDark ? `${color}40` : `${color}26`;
 
   return (
     <TouchableOpacity
@@ -32,12 +38,9 @@ export function TaskItem({
       ]}
     >
       <View
-        style={[
-          styles.iconContainer,
-          { backgroundColor: theme.surfaceContainerLow }
-        ]}
+        style={[styles.iconContainer, { backgroundColor: iconBackgroundColor }]}
       >
-        <MaterialDesignIcons name={icon} size={24} color={theme.primary} />
+        <MaterialDesignIcons name={icon} size={24} color={color} />
       </View>
       <View style={styles.textContainer}>
         <Text style={[styles.title, { color: theme.onSurface }]}>{title}</Text>
@@ -80,10 +83,11 @@ const styles = StyleSheet.create({
   iconContainer: {
     width: 48,
     height: 48,
-    borderRadius: 24,
+    borderRadius: 99,
     alignItems: "center",
     justifyContent: "center",
-    marginRight: 16
+    marginRight: 16,
+    overflow: "hidden"
   },
   textContainer: {
     flex: 1
@@ -103,14 +107,14 @@ const styles = StyleSheet.create({
   completedCircle: {
     width: 32,
     height: 32,
-    borderRadius: 16,
+    borderRadius: 99,
     alignItems: "center",
     justifyContent: "center"
   },
   emptyCircle: {
     width: 32,
     height: 32,
-    borderRadius: 16,
+    borderRadius: 99,
     borderWidth: 2
   }
 });
