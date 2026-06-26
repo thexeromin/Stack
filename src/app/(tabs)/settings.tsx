@@ -85,8 +85,8 @@ export default function Settings() {
         <SettingsSection title="Notifications">
           <SettingsItem
             icon="bell-outline"
-            iconColor={theme.primary}
-            iconBgColor={theme.primaryFixed}
+            iconColor={theme.onPrimaryContainer}
+            iconBgColor={theme.primaryContainer}
             title="Global Reminders"
             isSwitch
             switchValue={globalReminders}
@@ -94,8 +94,8 @@ export default function Settings() {
           />
           <SettingsItem
             icon="weather-night"
-            iconColor={theme.secondary}
-            iconBgColor={theme.secondaryFixed}
+            iconColor={theme.onSecondaryContainer}
+            iconBgColor={theme.secondaryContainer}
             title="Quiet Hours"
             value={`${formatQuietHours(quietHours.start)} - ${formatQuietHours(quietHours.end)}`}
             showChevron
@@ -107,8 +107,8 @@ export default function Settings() {
         <SettingsSection title="Account">
           <SettingsItem
             icon="account-outline"
-            iconColor={theme.tertiary}
-            iconBgColor={theme.tertiaryFixed}
+            iconColor={theme.onTertiaryContainer}
+            iconBgColor={theme.tertiaryContainer}
             title="Profile"
             showChevron
             onPress={() => {}}
@@ -136,8 +136,8 @@ export default function Settings() {
           />
           <SettingsItem
             icon="star-circle-outline"
-            iconColor={theme.tertiary}
-            iconBgColor={theme.tertiaryFixed}
+            iconColor={theme.onTertiaryContainer}
+            iconBgColor={theme.tertiaryContainer}
             title="Premium Features"
             showChevron
             onPress={() => {}}
