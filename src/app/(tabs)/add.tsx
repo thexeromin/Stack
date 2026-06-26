@@ -1,5 +1,13 @@
 import { useState } from "react";
-import { View, Text, StyleSheet, ScrollView, TextInput } from "react-native";
+import {
+  View,
+  Text,
+  StyleSheet,
+  ScrollView,
+  TextInput,
+  TouchableOpacity,
+  Alert
+} from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useTheme } from "@/hooks/use-theme";
 import { FormSection } from "@/components/form-section";
@@ -13,7 +21,8 @@ import { BottomTabInset } from "@/constants/theme";
 import { useRouter } from "expo-router";
 import { useHabitStore } from "@/store/habit";
 import { WEEKDAYS, type HabitIcon, type HabitColor } from "@/constants/habit";
-import { Alert } from "react-native";
+import DateTimePicker from "@react-native-community/datetimepicker";
+import { syncNotifications } from "@/services/notifications";
 
 export default function Add() {
   const theme = useTheme();
@@ -26,6 +35,12 @@ export default function Add() {
   const [freqType, setFreqType] = useState<"everyday" | "specific">("everyday");
   const [selectedDays, setSelectedDays] = useState<number[]>([0, 1, 2, 3, 4]); // M-F
   const [dailyReminder, setDailyReminder] = useState(true);
+  const [reminderTime, setReminderTime] = useState<Date>(() => {
+    const d = new Date();
+    d.setHours(8, 0, 0, 0);
+    return d;
+  });
+  const [showTimePicker, setShowTimePicker] = useState(false);
 
   const toggleDay = (index: number) => {
     setSelectedDays((prev) =>
@@ -33,6 +48,22 @@ export default function Add() {
         ? prev.filter((d) => d !== index)
         : [...prev, index].sort()
     );
+  };
+
+  const handleTimeChange = (event: any, selectedDate?: Date) => {
+    setShowTimePicker(false);
+    if (selectedDate) {
+      setReminderTime(selectedDate);
+    }
+  };
+
+  const formatTime = (d: Date) => {
+    let h = d.getHours();
+    const m = String(d.getMinutes()).padStart(2, "0");
+    const ampm = h >= 12 ? "PM" : "AM";
+    h = h % 12;
+    h = h ? h : 12;
+    return `${h}:${m} ${ampm}`;
   };
 
   const handleSave = () => {
@@ -55,7 +86,9 @@ export default function Add() {
       },
       reminder: {
         enabled: dailyReminder,
-        time: dailyReminder ? "08:00" : undefined
+        time: dailyReminder
+          ? `${String(reminderTime.getHours()).padStart(2, "0")}:${String(reminderTime.getMinutes()).padStart(2, "0")}`
+          : undefined
       }
     });
 
@@ -66,6 +99,9 @@ export default function Add() {
     setFreqType("everyday");
     setSelectedDays([0, 1, 2, 3, 4]);
     setDailyReminder(true);
+
+    // Synchronize notifications
+    syncNotifications();
 
     // Navigate to home tab
     router.navigate("/");
@@ -128,7 +164,9 @@ export default function Add() {
           />
         </FormSection>
 
-        <View
+        <TouchableOpacity
+          activeOpacity={0.8}
+          onPress={() => setShowTimePicker(true)}
           style={[
             styles.reminderCard,
             { backgroundColor: theme.surfaceContainerLowest }
@@ -165,7 +203,7 @@ export default function Add() {
                   }
                 ]}
               >
-                Notify me at 08:00 AM
+                Notify me at {formatTime(reminderTime)}
               </Text>
             </View>
           </View>
@@ -176,7 +214,17 @@ export default function Add() {
             inactiveColor={theme.surfaceContainerHighest}
             thumbColor={theme.surfaceContainerLowest}
           />
-        </View>
+        </TouchableOpacity>
+
+        {showTimePicker && (
+          <DateTimePicker
+            value={reminderTime}
+            mode="time"
+            is24Hour={false}
+            display="default"
+            onChange={handleTimeChange}
+          />
+        )}
 
         <View style={styles.buttonContainer}>
           <PrimaryButton title="Save Habit" onPress={handleSave} />
