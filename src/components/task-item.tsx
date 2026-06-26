@@ -13,6 +13,7 @@ export type TaskProps = {
   color: string;
   completed: boolean;
   onToggle?: () => void;
+  onLongPress?: () => void;
 };
 
 export function TaskItem({
@@ -21,7 +22,8 @@ export function TaskItem({
   icon,
   color,
   completed,
-  onToggle
+  onToggle,
+  onLongPress
 }: TaskProps) {
   const theme = useTheme() as any;
   const colorScheme = useColorScheme();
@@ -32,6 +34,7 @@ export function TaskItem({
     <TouchableOpacity
       activeOpacity={0.8}
       onPress={onToggle}
+      onLongPress={onLongPress}
       style={[
         styles.container,
         { backgroundColor: theme.surfaceContainerLowest }

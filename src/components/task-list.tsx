@@ -1,5 +1,7 @@
+import { useState } from "react";
 import { View, StyleSheet } from "react-native";
 import { TaskItem } from "./task-item";
+import { ConfirmModal } from "./confirm-modal";
 
 import { useHabitStore } from "@/store/habit";
 
@@ -8,6 +10,19 @@ export function TaskList() {
   const habitOrder = useHabitStore((state) => state.habitOrder);
   const logs = useHabitStore((state) => state.logs);
   const toggleLog = useHabitStore((state) => state.toggleLog);
+  const removeHabit = useHabitStore((state) => state.removeHabit);
+
+  const [habitToDelete, setHabitToDelete] = useState<{
+    id: string;
+    name: string;
+  } | null>(null);
+
+  const handleDelete = () => {
+    if (habitToDelete) {
+      removeHabit(habitToDelete.id);
+      setHabitToDelete(null);
+    }
+  };
 
   // Get today's date in YYYY-MM-DD format based on local time
   const today = new Date().toLocaleDateString("en-CA");
@@ -31,9 +46,19 @@ export function TaskList() {
             color={habit.color}
             completed={completed}
             onToggle={() => toggleLog(id, today)}
+            onLongPress={() => setHabitToDelete({ id, name: habit.name })}
           />
         );
       })}
+
+      <ConfirmModal
+        visible={!!habitToDelete}
+        title="Delete Habit"
+        message={`Are you sure you want to delete "${habitToDelete?.name}"? This action cannot be undone.`}
+        confirmText="Delete"
+        onConfirm={handleDelete}
+        onCancel={() => setHabitToDelete(null)}
+      />
     </View>
   );
 }
