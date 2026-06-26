@@ -1,5 +1,12 @@
 import { useState } from "react";
-import { Text, View, StyleSheet, ScrollView, Alert } from "react-native";
+import {
+  Text,
+  View,
+  StyleSheet,
+  ScrollView,
+  Alert,
+  useColorScheme
+} from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useTheme } from "@/hooks/use-theme";
 import { SettingsSection } from "@/components/settings-section";
@@ -11,7 +18,10 @@ import { syncNotifications } from "@/services/notifications";
 export default function Settings() {
   const theme = useTheme();
 
-  const [darkMode, setDarkMode] = useState(false);
+  const systemScheme = useColorScheme();
+  const darkMode = useSettingsStore((state) => state.darkMode);
+  const setDarkMode = useSettingsStore((state) => state.setDarkMode);
+  const isDark = darkMode ?? systemScheme === "dark";
 
   const globalReminders = useSettingsStore((state) => state.globalReminders);
   const quietHours = useSettingsStore((state) => state.quietHours);
@@ -131,8 +141,8 @@ export default function Settings() {
             iconBgColor={theme.surfaceVariant}
             title="Dark Mode"
             isSwitch
-            switchValue={darkMode}
-            onSwitchChange={setDarkMode}
+            switchValue={isDark}
+            onSwitchChange={(val) => setDarkMode(val)}
           />
           <SettingsItem
             icon="star-circle-outline"

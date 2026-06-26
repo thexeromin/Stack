@@ -8,8 +8,10 @@ interface SettingsState {
     start: string; // "HH:mm"
     end: string; // "HH:mm"
   };
+  darkMode: boolean | null; // null = use system
   setGlobalReminders: (value: boolean) => void;
   setQuietHours: (start: string, end: string) => void;
+  setDarkMode: (value: boolean | null) => void;
 }
 
 export const useSettingsStore = create<SettingsState>()(
@@ -20,8 +22,10 @@ export const useSettingsStore = create<SettingsState>()(
         start: "22:00",
         end: "07:00"
       },
+      darkMode: null,
       setGlobalReminders: (value) => set({ globalReminders: value }),
-      setQuietHours: (start, end) => set({ quietHours: { start, end } })
+      setQuietHours: (start, end) => set({ quietHours: { start, end } }),
+      setDarkMode: (value) => set({ darkMode: value })
     }),
     {
       name: "settings-storage",
