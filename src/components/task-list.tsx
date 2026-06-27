@@ -25,13 +25,23 @@ export function TaskList() {
   };
 
   // Get today's date in YYYY-MM-DD format based on local time
-  const today = new Date().toLocaleDateString("en-CA");
+  const todayDate = new Date();
+  const today = todayDate.toLocaleDateString("en-CA");
+  const dayNames = ["sun", "mon", "tue", "wed", "thu", "fri", "sat"];
+  const todayDayName = dayNames[todayDate.getDay()];
 
   return (
     <View style={styles.container}>
       {habitOrder.map((id) => {
         const habit = habits[id];
         if (!habit) return null;
+
+        if (
+          habit.frequency.type === "custom" &&
+          !habit.frequency.days?.includes(todayDayName as any)
+        ) {
+          return null;
+        }
 
         const completed = logs[id]?.[today] || false;
         // TODO: implment streak functionality
